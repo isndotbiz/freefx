@@ -106,6 +106,14 @@ uv run harmonizer.py vox.wav out.wav --interval -12 --mix 0.4        # pitch har
 uv run bitcrush.py   loop.wav out.wav --bits 6 --downsample 3        # bit/rate crusher (lo-fi)
 uv run delay.py      vox.wav out.wav --time-ms 375 --feedback 0.4 --pingpong   # stereo/ping-pong throw
 uv run chorus.py     pad.wav out.wav --voices 3 --rate 0.6 --depth 4 # 80s modulated-delay chorus
+uv run duck.py       pads.wav out.wav --key kick.wav --amount 9      # sidechain pump / ducking
+uv run deesser.py    vox.wav out.wav --freq 6500 --threshold -30     # dedicated split de-esser
+uv run flanger.py    gtr.wav out.wav --rate 0.3 --depth 3 --feedback 0.6  # jet-sweep flanger
+uv run phaser.py     pad.wav out.wav --stages 6 --rate 0.4           # swept all-pass phaser
+uv run tremolo.py    gtr.wav out.wav --rate 5 --depth 0.6 [--pan]    # tremolo / auto-pan
+uv run vocoder.py    vox.wav out.wav --carrier saw --bands 24        # channel vocoder (robot vox)
+uv run texture.py    beat.wav out.wav --crackle 0.4 --hiss 0.2       # vinyl/hiss lo-fi texture
+uv run irverb.py     vox.wav out.wav --ir plate.wav --mix 0.25       # convolution reverb (real IRs)
 ```
 *All verified: exciter raises HF energy, doubler/width/chorus create measured stereo width, gate attenuates sub-threshold frames, mbcomp reconstructs to −240 dB at ratio 1:1, harmonizer adds +5 dB sub-octave, bitcrush/clipper/transient pass their signal tests.*
 
@@ -133,7 +141,14 @@ Every effect here is built from **published DSP** (EQ cookbook, look-ahead limit
 - [x] `bitcrush` — bit-depth / sample-rate crusher ✅
 - [x] `delay` — stereo / ping-pong feedback delay ✅
 - [x] `chorus` — 80s modulated-delay chorus ✅
-- [ ] VST3 ports (JUCE) of the proven modules — the remaining frontier
+- [x] `duck` — sidechain ducking / pump ✅
+- [x] `deesser` — dedicated split de-esser ✅
+- [x] `flanger` · `phaser` · `tremolo`/auto-pan — modulation FX ✅
+- [x] `vocoder` — channel vocoder (robot/talkbox vocals) ✅
+- [x] `texture` — vinyl crackle / tape hiss / wow lo-fi ✅
+- [x] `irverb` — convolution reverb (load real IRs) ✅
+- [x] JUCE VST3 ports — `eq`, `clipper`, `sat` built + pedalboard-verified (`vst3/`) ✅
+- [ ] VST3 ports of the remaining 23 modules — the scaling frontier (same CMake pattern)
 
 ## License
 MIT (see `LICENSE`). Not affiliated with or derived from any commercial audio product.
