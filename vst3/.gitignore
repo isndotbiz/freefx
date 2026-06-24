@@ -1,0 +1,2 @@
+# CMake build tree (includes the FetchContent JUCE clone and built .vst3 bundles)
+build/
