@@ -24,6 +24,14 @@ uv run eq.py in.wav out.wav --band peak:300:-3:0.9 --band highshelf:10000:2:0.7 
 ```
 Band format: `TYPE:FREQ_HZ:GAIN_DB:Q`.
 
+### `verb` — algorithmic reverb
+Clean-room Freeverb topology: 8 parallel damped comb filters → 4 series allpass filters per channel. Delay loops are JIT-compiled (numba) so it's fast on a full track.
+```bash
+uv run verb.py in.wav out.wav --roomsize 0.7 --damp 0.4 --wet 0.3
+uv run verb.py vocal.wav wet.wav --roomsize 0.85 --wet 0.22 --predelay-ms 25 --tail-sec 2
+```
+Params: `--roomsize` (decay), `--damp` (HF absorption), `--wet`/`--dry`, `--width` (stereo), `--predelay-ms`, `--tail-sec` (ring-out). *Verified: stable, monotonic decay (no blowup).*
+
 ## Install & run
 Requires [`uv`](https://docs.astral.sh/uv/) — it resolves all deps (numpy, scipy, soundfile) automatically. I/O: WAV/FLAC/OGG (libsndfile). `--target-lufs` in `tplimit` also needs `ffmpeg` on PATH for loudness measurement.
 
@@ -31,7 +39,7 @@ Requires [`uv`](https://docs.astral.sh/uv/) — it resolves all deps (numpy, sci
 Every effect here is built from **published DSP** (EQ cookbook, look-ahead limiting, oversampling for true-peak). No commercial plugin was decompiled or reverse-engineered — that would be illegal *and* un-licensable as open source. We build the math from scratch and stand on prior open work (e.g. [Airwindows](https://www.airwindows.com/), public-domain).
 
 ## Roadmap
-- [ ] `verb` — feedback-delay-network reverb
+- [x] `verb` — algorithmic reverb (Freeverb topology) ✅
 - [ ] `dyneq` — dynamic EQ (per-band compression)
 - [ ] `autotune` — real-time-style pitch correction (offline)
 - [ ] VST3 ports (JUCE) of the proven modules
