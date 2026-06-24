@@ -32,18 +32,27 @@ uv run verb.py vocal.wav wet.wav --roomsize 0.85 --wet 0.22 --predelay-ms 25 --t
 ```
 Params: `--roomsize` (decay), `--damp` (HF absorption), `--wet`/`--dry`, `--width` (stereo), `--predelay-ms`, `--tail-sec` (ring-out). *Verified: stable, monotonic decay (no blowup).*
 
+### `dyneq` — dynamic EQ (per-band compression / expansion)
+A peaking band whose gain is driven by the signal's own level *inside that band* — de-ess, tame a boomy resonance only when it spikes, or add air only on loud notes. Clean-room parallel form `y = x + k(t)·BPF(x)` with a standard compressor static curve and attack/release.
+```bash
+uv run dyneq.py vocal.wav out.wav --band 7000:2.5:-28:4:cut          # dynamic de-ess
+uv run dyneq.py mix.wav out.wav --band 220:1.2:-24:3:cut --band 12000:0.8:-30:2:boost \
+      --attack-ms 5 --release-ms 120 --range-db 9
+```
+Band format: `FREQ_HZ:Q:THRESHOLD_DB:RATIO[:cut|boost]` (`cut` compresses above threshold, `boost` expands below). Global: `--attack-ms --release-ms --range-db --makeup-db`. Prints the gain range applied per band. *Verified: cut-only −6.8 dB @ 7 kHz / −10.3 dB @ 220 Hz on a real vocal master, output finite & non-clipping.*
+
 ## Install & run
-Requires [`uv`](https://docs.astral.sh/uv/) — it resolves all deps (numpy, scipy, soundfile) automatically. I/O: WAV/FLAC/OGG (libsndfile). `--target-lufs` in `tplimit` also needs `ffmpeg` on PATH for loudness measurement.
+Requires [`uv`](https://docs.astral.sh/uv/) — it resolves all deps (numpy, scipy, soundfile; `verb` and `dyneq` also pull `numba` for JIT) automatically. I/O: WAV/FLAC/OGG (libsndfile). `--target-lufs` in `tplimit` also needs `ffmpeg` on PATH for loudness measurement.
 
 ## Principle: clean-room only
 Every effect here is built from **published DSP** (EQ cookbook, look-ahead limiting, oversampling for true-peak). No commercial plugin was decompiled or reverse-engineered — that would be illegal *and* un-licensable as open source. We build the math from scratch and stand on prior open work (e.g. [Airwindows](https://www.airwindows.com/), public-domain).
 
 ## Roadmap
 - [x] `verb` — algorithmic reverb (Freeverb topology) ✅
-- [ ] `dyneq` — dynamic EQ (per-band compression)
+- [x] `dyneq` — dynamic EQ (per-band compression / expansion) ✅
 - [ ] `autotune` — real-time-style pitch correction (offline)
+- [ ] `comp` — full-band compressor + de-esser
 - [ ] VST3 ports (JUCE) of the proven modules
-- [ ] dynamics: compressor / de-esser
 
 ## License
 MIT (see `LICENSE`). Not affiliated with or derived from any commercial audio product.
