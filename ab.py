@@ -101,23 +101,38 @@ def null_residual_db(ref, cand):
                          (np.sqrt(np.mean(rm ** 2)) + 1e-12))
 
 
+def _coerce(v):
+    low = v.strip().lower()
+    if low in ("on", "true", "yes"):
+        return True
+    if low in ("off", "false", "no"):
+        return False
+    try:
+        return float(v)
+    except ValueError:
+        return v
+
+
 def cmd_vst(a):
     from pedalboard import load_plugin
-    from pedalboard.io import AudioFile
     path = find_vst3(a.plugin)
     plug = load_plugin(path)
     for kv in a.param:
         k, v = kv.split("=", 1)
         try:
-            setattr(plug, k, float(v))
-        except Exception:
-            setattr(plug, k, v)
+            setattr(plug, k, _coerce(v))
+        except Exception as e:
+            print(f"     ! could not set {k}={v}: {e}")
     x, sr = sf.read(a.input, always_2d=True)
     y = plug(x.T.astype(np.float32), sr).T
     sf.write(a.output, y, sr)
     print(f"vst: {os.path.basename(path)} -> {a.output}  ({y.shape[0]/sr:.1f}s)")
-    if a.param:
-        print(f"     params: {', '.join(a.param)}")
+    for kv in a.param:                                   # read back what actually took
+        k = kv.split("=", 1)[0]
+        try:
+            print(f"     {k} = {getattr(plug, k)}")
+        except Exception:
+            pass
 
 
 def cmd_compare(a):
