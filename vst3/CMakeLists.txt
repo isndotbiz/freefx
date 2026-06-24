@@ -68,6 +68,10 @@ function(freefx_add_plugin target productName pluginCode)
     )
 endfunction()
 
-freefx_add_plugin(freefx_eq      "freefx-eq"      Feq1 ${CMAKE_CURRENT_SOURCE_DIR}/eq/EqProcessor.cpp)
-freefx_add_plugin(freefx_clipper "freefx-clipper" Fclp ${CMAKE_CURRENT_SOURCE_DIR}/clipper/ClipperProcessor.cpp)
-freefx_add_plugin(freefx_sat     "freefx-sat"     Fsat ${CMAKE_CURRENT_SOURCE_DIR}/sat/SatProcessor.cpp)
+# Auto-discover modules: every <module>/module.cmake self-registers its plugin
+# via freefx_add_plugin(...). Adding a new port = adding a new dir + module.cmake;
+# no edits to this file, so parallel ports never collide here.
+file(GLOB module_cmakes CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/*/module.cmake)
+foreach(mc ${module_cmakes})
+    include(${mc})
+endforeach()
