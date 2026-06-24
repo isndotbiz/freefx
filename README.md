@@ -50,6 +50,15 @@ uv run autotune.py vox.wav out.wav --key A --scale minor --formant -3 --pitch -2
 ```
 Params: `--key/--scale`, `--retune-ms` (slew), `--strength` (1=full snap), `--formant` (semitones, negative = deeper), `--pitch` (transpose), `--fast`. *Verified on a real vocal stem: hard tune moved notes-in-scale 39%→70% and halved cents-off; `--pitch -2` transposed −2 semitones to within 0.5%.*
 
+### `comp` — full-band compressor / de-esser
+Feed-forward compressor: soft-knee static curve, peak or RMS detection, attack/release, makeup (`auto` or fixed dB), stereo-linked so the image holds. Add `--sidechain-hpf` and it only reacts to bright/loud content — a de-esser.
+```bash
+uv run comp.py vox.wav out.wav --threshold -18 --ratio 4 --attack-ms 5 --release-ms 120 --makeup auto
+uv run comp.py drums.wav out.wav --threshold -12 --ratio 6 --knee 4 --rms
+uv run comp.py vox.wav out.wav --threshold -26 --ratio 5 --sidechain-hpf 5500   # de-ess
+```
+Params: `--threshold --ratio --knee --attack-ms --release-ms --rms[/--rms-ms] --makeup --sidechain-hpf`. Prints gain-reduction range + makeup. *Verified: compressed a clean 20 dB loud/quiet test signal to 12.6 dB (loud clamped, quiet untouched).*
+
 ## Install & run
 Requires [`uv`](https://docs.astral.sh/uv/) — it resolves all deps (numpy, scipy, soundfile; `verb` and `dyneq` also pull `numba` for JIT) automatically. I/O: WAV/FLAC/OGG (libsndfile). `--target-lufs` in `tplimit` also needs `ffmpeg` on PATH for loudness measurement.
 
@@ -60,8 +69,9 @@ Every effect here is built from **published DSP** (EQ cookbook, look-ahead limit
 - [x] `verb` — algorithmic reverb (Freeverb topology) ✅
 - [x] `dyneq` — dynamic EQ (per-band compression / expansion) ✅
 - [x] `autotune` — hard pitch tuning effect (WORLD, glide + formant/pitch shift) ✅
-- [ ] `comp` — full-band compressor + de-esser
+- [x] `comp` — full-band compressor + de-esser ✅
 - [ ] VST3 ports (JUCE) of the proven modules
+- [ ] `ab` — A/B harness: null-test + LUFS/TP/spectral diff vs reference plugins
 
 ## License
 MIT (see `LICENSE`). Not affiliated with or derived from any commercial audio product.
