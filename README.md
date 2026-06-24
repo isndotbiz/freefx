@@ -41,6 +41,15 @@ uv run dyneq.py mix.wav out.wav --band 220:1.2:-24:3:cut --band 12000:0.8:-30:2:
 ```
 Band format: `FREQ_HZ:Q:THRESHOLD_DB:RATIO[:cut|boost]` (`cut` compresses above threshold, `boost` expands below). Global: `--attack-ms --release-ms --range-db --makeup-db`. Prints the gain range applied per band. *Verified: cut-only −6.8 dB @ 7 kHz / −10.3 dB @ 220 Hz on a real vocal master, output finite & non-clipping.*
 
+### `autotune` — hard pitch tuning (the creative effect)
+The T-Pain / trap effect, not transparent correction (that's [`pitchpin`](https://github.com/isndotbiz/pitchpin)). Snaps dead-flat to the scale via the WORLD vocoder, with a `--retune-ms` glide knob (0 = robotic staircase, higher = slurred glide), a `--formant` shift for a deeper/bigger or brighter/smaller voice, and a `--pitch` transpose. Monophonic only.
+```bash
+uv run autotune.py vox.wav out.wav --key A --scale minor                  # hard tune
+uv run autotune.py vox.wav out.wav --key C --scale major --retune-ms 40   # T-Pain glide
+uv run autotune.py vox.wav out.wav --key A --scale minor --formant -3 --pitch -2  # deep/dark
+```
+Params: `--key/--scale`, `--retune-ms` (slew), `--strength` (1=full snap), `--formant` (semitones, negative = deeper), `--pitch` (transpose), `--fast`. *Verified on a real vocal stem: hard tune moved notes-in-scale 39%→70% and halved cents-off; `--pitch -2` transposed −2 semitones to within 0.5%.*
+
 ## Install & run
 Requires [`uv`](https://docs.astral.sh/uv/) — it resolves all deps (numpy, scipy, soundfile; `verb` and `dyneq` also pull `numba` for JIT) automatically. I/O: WAV/FLAC/OGG (libsndfile). `--target-lufs` in `tplimit` also needs `ffmpeg` on PATH for loudness measurement.
 
@@ -50,7 +59,7 @@ Every effect here is built from **published DSP** (EQ cookbook, look-ahead limit
 ## Roadmap
 - [x] `verb` — algorithmic reverb (Freeverb topology) ✅
 - [x] `dyneq` — dynamic EQ (per-band compression / expansion) ✅
-- [ ] `autotune` — real-time-style pitch correction (offline)
+- [x] `autotune` — hard pitch tuning effect (WORLD, glide + formant/pitch shift) ✅
 - [ ] `comp` — full-band compressor + de-esser
 - [ ] VST3 ports (JUCE) of the proven modules
 
