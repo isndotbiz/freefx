@@ -68,6 +68,14 @@ uv run sat.py vox.wav out.wav --drive 8 --flutter 6 --bias 0.15      # lo-fi wob
 ```
 Params: `--drive` (dB in), `--bias` (asymmetry → even harmonics), `--tone-hz` (HF rolloff), `--flutter[/--flutter-hz]` (cents of wow), `--mix`, `--oversample`. *Verified: 1 kHz sine gained a 2nd harmonic at −25 dB / 3rd at −16 dB (from a −124 dB noise floor) — real harmonic generation, no aliasing.*
 
+### `ab` — A/B comparison harness
+Render a source through a real plugin (pedalboard), then measure + null-test any set of renders and emit a blind-labelled pair for a listening panel.
+```bash
+uv run ab.py vst dope_boy_fresh.wav nova.wav "TDR Nova" --param Mix=0.3     # B = a real plugin
+uv run ab.py compare freefx_out.wav nova.wav --src dope_boy_fresh.wav --blind ./ab_out
+```
+`compare` prints integrated LUFS, true-peak dBTP, spectral tilt, and null residual (gain- & time-aligned) of each candidate vs the first file, then writes `blind_1/2.wav` + a hidden `BLIND_KEY.txt`. *Verified: `verb` vs Valhalla on dope_boy_fresh — −5.0 dB null, blind pair written.*
+
 ## Install & run
 Requires [`uv`](https://docs.astral.sh/uv/) — it resolves all deps (numpy, scipy, soundfile; `verb` and `dyneq` also pull `numba` for JIT) automatically. I/O: WAV/FLAC/OGG (libsndfile). `--target-lufs` in `tplimit` also needs `ffmpeg` on PATH for loudness measurement.
 
@@ -80,7 +88,7 @@ Every effect here is built from **published DSP** (EQ cookbook, look-ahead limit
 - [x] `autotune` — hard pitch tuning effect (WORLD, glide + formant/pitch shift) ✅
 - [x] `comp` — full-band compressor + de-esser ✅
 - [x] `sat` — tape / analog saturation (oversampled waveshaper) ✅
-- [ ] `ab` — A/B harness: null-test + LUFS/TP/spectral diff vs reference plugins
+- [x] `ab` — A/B harness: null-test + LUFS/TP/spectral diff vs reference plugins ✅
 - [ ] VST3 ports (JUCE) of the proven modules
 - [ ] (deferred — covered by owned free plugins) `delay`, `chorus`
 
