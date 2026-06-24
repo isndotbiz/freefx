@@ -59,6 +59,15 @@ uv run comp.py vox.wav out.wav --threshold -26 --ratio 5 --sidechain-hpf 5500   
 ```
 Params: `--threshold --ratio --knee --attack-ms --release-ms --rms[/--rms-ms] --makeup --sidechain-hpf`. Prints gain-reduction range + makeup. *Verified: compressed a clean 20 dB loud/quiet test signal to 12.6 dB (loud clamped, quiet untouched).*
 
+### `sat` — tape / analog saturation
+The warmth/grit/glue colour. Drives the signal into an oversampled (4×, anti-aliased) asymmetric tanh waveshaper for even+odd harmonics, with a tape-style HF rolloff and optional wow/flutter pitch wobble.
+```bash
+uv run sat.py vox.wav out.wav --drive 6                              # gentle warmth
+uv run sat.py mix.wav out.wav --drive 10 --tone-hz 12000 --mix 0.8   # tape glue
+uv run sat.py vox.wav out.wav --drive 8 --flutter 6 --bias 0.15      # lo-fi wobble
+```
+Params: `--drive` (dB in), `--bias` (asymmetry → even harmonics), `--tone-hz` (HF rolloff), `--flutter[/--flutter-hz]` (cents of wow), `--mix`, `--oversample`. *Verified: 1 kHz sine gained a 2nd harmonic at −25 dB / 3rd at −16 dB (from a −124 dB noise floor) — real harmonic generation, no aliasing.*
+
 ## Install & run
 Requires [`uv`](https://docs.astral.sh/uv/) — it resolves all deps (numpy, scipy, soundfile; `verb` and `dyneq` also pull `numba` for JIT) automatically. I/O: WAV/FLAC/OGG (libsndfile). `--target-lufs` in `tplimit` also needs `ffmpeg` on PATH for loudness measurement.
 
@@ -70,8 +79,10 @@ Every effect here is built from **published DSP** (EQ cookbook, look-ahead limit
 - [x] `dyneq` — dynamic EQ (per-band compression / expansion) ✅
 - [x] `autotune` — hard pitch tuning effect (WORLD, glide + formant/pitch shift) ✅
 - [x] `comp` — full-band compressor + de-esser ✅
-- [ ] VST3 ports (JUCE) of the proven modules
+- [x] `sat` — tape / analog saturation (oversampled waveshaper) ✅
 - [ ] `ab` — A/B harness: null-test + LUFS/TP/spectral diff vs reference plugins
+- [ ] VST3 ports (JUCE) of the proven modules
+- [ ] (deferred — covered by owned free plugins) `delay`, `chorus`
 
 ## License
 MIT (see `LICENSE`). Not affiliated with or derived from any commercial audio product.
