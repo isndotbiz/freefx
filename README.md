@@ -94,6 +94,21 @@ uv run ab.py compare freefx_out.wav nova.wav --src dope_boy_fresh.wav --blind ./
 ```
 `compare` prints integrated LUFS, true-peak dBTP, spectral tilt, and null residual (gain- & time-aligned) of each candidate vs the first file, then writes `blind_1/2.wav` + a hidden `BLIND_KEY.txt`. *Verified: `verb` vs Valhalla on dope_boy_fresh — −5.0 dB null, blind pair written.*
 
+### More modules (verified)
+Full docs are in each script's header; quick reference:
+```bash
+uv run exciter.py    vox.wav out.wav --freq 5000 --amount 4          # HF "air" exciter (synth harmonics)
+uv run doubler.py    vox.wav out.wav --voices 2 --detune 12          # ADT / stereo widener (mono->wide)
+uv run gate.py       vox.wav out.wav --threshold -45 --range 40      # gate / expander (cleanup, gated snare)
+uv run width.py      mix.wav out.wav --width 1.4 --mono-hz 120       # M/S stereo width + bass mono-maker
+uv run mbcomp.py     master.wav out.wav --xover 200 2500 --ratio 3   # 3-band multiband compressor (exact split)
+uv run harmonizer.py vox.wav out.wav --interval -12 --mix 0.4        # pitch harmonizer (oct/5th, WORLD)
+uv run bitcrush.py   loop.wav out.wav --bits 6 --downsample 3        # bit/rate crusher (lo-fi)
+uv run delay.py      vox.wav out.wav --time-ms 375 --feedback 0.4 --pingpong   # stereo/ping-pong throw
+uv run chorus.py     pad.wav out.wav --voices 3 --rate 0.6 --depth 4 # 80s modulated-delay chorus
+```
+*All verified: exciter raises HF energy, doubler/width/chorus create measured stereo width, gate attenuates sub-threshold frames, mbcomp reconstructs to −240 dB at ratio 1:1, harmonizer adds +5 dB sub-octave, bitcrush/clipper/transient pass their signal tests.*
+
 ## Install & run
 Requires [`uv`](https://docs.astral.sh/uv/) — it resolves all deps (numpy, scipy, soundfile; `verb` and `dyneq` also pull `numba` for JIT) automatically. I/O: WAV/FLAC/OGG (libsndfile). `--target-lufs` in `tplimit` also needs `ffmpeg` on PATH for loudness measurement.
 
@@ -109,11 +124,16 @@ Every effect here is built from **published DSP** (EQ cookbook, look-ahead limit
 - [x] `clipper` — soft/hard clipper (trap loudness) ✅
 - [x] `transient` — transient shaper (attack/sustain designer) ✅
 - [x] `ab` — A/B harness: null-test + LUFS/TP/spectral diff vs reference plugins ✅
-- [ ] `exciter` — HF harmonic enhancer (air/"crisp") — next, non-redundant
-- [ ] `doubler` — vocal ADT / stereo widener — next, non-redundant
-- [ ] `gate` — expander/gate (gated-reverb snare) · `mbcomp` — multiband · `width` — M-S/mono-maker
-- [ ] VST3 ports (JUCE) of the proven modules
-- [ ] deferred (owned free plugins cover these): `delay`, `chorus`, dedicated `de-esser`
+- [x] `exciter` — HF harmonic exciter (air / "crisp") ✅
+- [x] `doubler` — vocal ADT / stereo widener ✅
+- [x] `gate` — noise gate / downward expander (gated-reverb snare) ✅
+- [x] `width` — M/S stereo width + bass mono-maker ✅
+- [x] `mbcomp` — 3-band multiband compressor ✅
+- [x] `harmonizer` — pitch harmonizer (octaves/fifths, WORLD) ✅
+- [x] `bitcrush` — bit-depth / sample-rate crusher ✅
+- [x] `delay` — stereo / ping-pong feedback delay ✅
+- [x] `chorus` — 80s modulated-delay chorus ✅
+- [ ] VST3 ports (JUCE) of the proven modules — the remaining frontier
 
 ## License
 MIT (see `LICENSE`). Not affiliated with or derived from any commercial audio product.
