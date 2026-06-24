@@ -68,6 +68,24 @@ uv run sat.py vox.wav out.wav --drive 8 --flutter 6 --bias 0.15      # lo-fi wob
 ```
 Params: `--drive` (dB in), `--bias` (asymmetry → even harmonics), `--tone-hz` (HF rolloff), `--flutter[/--flutter-hz]` (cents of wow), `--mix`, `--oversample`. *Verified: 1 kHz sine gained a 2nd harmonic at −25 dB / 3rd at −16 dB (from a −124 dB noise floor) — real harmonic generation, no aliasing.*
 
+### `clipper` — soft / hard clipper (trap loudness)
+Flattens peaks instantly instead of riding gain like a limiter — the aggressive way trap/hip-hop masters get loud. Oversampled 4× so the clipping harmonics don't alias. Soft (tanh knee) or `--hard`.
+```bash
+uv run clipper.py master.wav out.wav --drive 4 --ceiling -1        # soft clip 4 dB in
+uv run clipper.py 808.wav out.wav --drive 6 --ceiling -0.5 --hard  # hard clip
+uv run clipper.py mix.wav out.wav --drive 3 --mix 0.7             # parallel clip
+```
+Params: `--drive --ceiling --hard --mix --oversample`. Reports % samples clipped + crest change. *Verified: hard clip 10 dB into −1 dBTP flattened a drum hit 5.6% of samples, crest 15.8→9.0 dB.*
+
+### `transient` — transient shaper (attack / sustain)
+Level-independent punch control: snap an 808/snare attack or fatten its tail, without the level-dependent behaviour of a compressor. Dual-envelope (fast vs slow follower) design.
+```bash
+uv run transient.py drums.wav out.wav --attack 6                # snappier
+uv run transient.py 808.wav out.wav --attack 4 --sustain -3     # punchier, tighter tail
+uv run transient.py loop.wav out.wav --attack -4               # soften the hits
+```
+Params: `--attack` (+ snap / − soften), `--sustain` (+ fatter / − tighter), `--max-db`. *Verified on a synthetic drum: `--attack +8` raised crest to 16.2 dB, `−8` lowered it to 14.7 dB (dry 15.8) — punch up/down as intended.*
+
 ### `ab` — A/B comparison harness
 Render a source through a real plugin (pedalboard), then measure + null-test any set of renders and emit a blind-labelled pair for a listening panel.
 ```bash
@@ -88,9 +106,14 @@ Every effect here is built from **published DSP** (EQ cookbook, look-ahead limit
 - [x] `autotune` — hard pitch tuning effect (WORLD, glide + formant/pitch shift) ✅
 - [x] `comp` — full-band compressor + de-esser ✅
 - [x] `sat` — tape / analog saturation (oversampled waveshaper) ✅
+- [x] `clipper` — soft/hard clipper (trap loudness) ✅
+- [x] `transient` — transient shaper (attack/sustain designer) ✅
 - [x] `ab` — A/B harness: null-test + LUFS/TP/spectral diff vs reference plugins ✅
+- [ ] `exciter` — HF harmonic enhancer (air/"crisp") — next, non-redundant
+- [ ] `doubler` — vocal ADT / stereo widener — next, non-redundant
+- [ ] `gate` — expander/gate (gated-reverb snare) · `mbcomp` — multiband · `width` — M-S/mono-maker
 - [ ] VST3 ports (JUCE) of the proven modules
-- [ ] (deferred — covered by owned free plugins) `delay`, `chorus`
+- [ ] deferred (owned free plugins cover these): `delay`, `chorus`, dedicated `de-esser`
 
 ## License
 MIT (see `LICENSE`). Not affiliated with or derived from any commercial audio product.
