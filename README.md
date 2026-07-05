@@ -4,10 +4,38 @@
 
 MIT-licensed. Sibling of [`pitchpin`](https://github.com/isndotbiz/pitchpin) (pitch correction). Python first; VST3 ports planned.
 
+## One command
+
+Use `freefx.py` as the suite entry point:
+
+```bash
+uv run freefx.py list
+uv run freefx.py describe vocal.wav out.wav "hard tune, de-ess, add air, compress" --key A
+uv run freefx.py chain vocal.wav out.wav --preset vocal-modern --key A --scale minor
+uv run freefx.py run eq in.wav out.wav -- --band hpf:80::0.707
+uv run freefx.py plugins
+uv run freefx.py verify-vst3
+```
+
 ## Why
 Most open-source effects are real-time DAW plugins. `freefx` is the *offline, command-line, pipeline-friendly* kind — master a folder, script a chain, reproduce a mix exactly. Built so the community can read, learn from, and improve the DSP.
 
 ## Tools
+
+### `chain` — assistant-friendly effect chains
+Describe the sound you want, or pick a named preset, and `chain.py` renders a
+repeatable sequence of freefx tools. This is the easiest way to use Claude/Codex
+like a text-driven plugin rack: ask for the sound, inspect the printed commands,
+then rerun or tweak the chain.
+```bash
+uv run chain.py vocal.wav vocal-polished.wav --preset vocal-modern --key A --scale minor
+uv run chain.py vocal.wav vocal-hard.wav --describe "hard tune vocal, de-ess, add air, compress, reverb"
+uv run chain.py mix.wav master.wav --describe "loud warm trap master with clipper and limiter"
+uv run chain.py in.wav out.wav --preset lofi --dry-run
+uv run chain.py --list-presets
+```
+Current presets: `vocal-clean`, `vocal-modern`, `vocal-hard-tune`,
+`vocal-natural-tune`, `master-loud`, `trap-loud`, `lofi`, `space`.
 
 ### `tplimit` — true-peak limiter / loudness maximizer
 Oversampled look-ahead brickwall limiting. Catches inter-sample peaks so the output never exceeds the ceiling in dBTP; `--target-lufs` auto-calibrates gain to a loudness target.

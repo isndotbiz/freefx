@@ -1,10 +1,10 @@
 # STATE — freefx (clean-room MIT audio effects suite)
 
 > Resume doc. Read first on session start. `/state` reads it, `/wrap` writes it.
-> Last touch: 2026-06-26 — /wrap. **26 Python effects + `ab` + `match` shipped & pushed.** JUCE VST3 ports in progress: **10 built+verified+merged, 9 written-but-UNVERIFIED (on branches), 5 not started.**
+> Last touch: 2026-07-04 — audit. **26 Python effects + `ab` + `match` shipped & pushed.** VST3s: **19/19 built (clean build exit 0, explicit /usr/bin/cc — `~/.local/bin/cc` shadows the compiler) + 19/19 pedalboard-verified (`vst3/verify.py`) + installed to ~/Library/Audio/Plug-Ins/VST3 (20/20 incl. LoudMax load OK, adhoc-signed, no quarantine). 5 still not started: delay, chorus, width, doubler, irverb. master 13 commits ahead of origin — push gate (combined build) now PASSED, push awaits Jonathan.**
 
 ## Mission anchor
-A complete, free, **MIT, clean-room** audio-effects suite that anyone can use — the legal answer to "make the paid plugins free for everyone." Built from public DSP only. Pairs with the music-gen work in `../MusicOld`. Recreational/for-fun lineage, but the repo is public (github.com/isndotbiz/freefx) and real.
+A complete, free, **MIT, clean-room** audio-effects suite that anyone can use — the legal answer to "make the paid plugins free for everyone." Built from public DSP only. Pairs with the music-gen work in the parent dir `..` (MusicOld — freefx now lives inside it, moved 2026-07-03). Recreational/for-fun lineage, but the repo is public (github.com/isndotbiz/freefx) and real.
 
 ## HARD RULE (load-bearing — asked 3×, held every time)
 **NEVER reverse-engineer / decompile any proprietary plugin** (Graillon, TDR Nova, Valhalla, Melodyne, Auto-Tune…). It's illegal AND un-MIT-licensable (derivative of their binary). The legal path = **clean-room from public DSP** + `match.py` (black-box behavioral matching: measure the plugin's *output*, never its code). That IS what this repo does.
@@ -19,13 +19,11 @@ Target: port 21 effects to JUCE VST3 (the 3 WORLD-pitch modules **autotune/harmo
 
 | State | Modules | Where |
 |-------|---------|-------|
-| ✅ built + verified + **merged to master** | eq, clipper, sat, duck, deesser, flanger, phaser, tremolo, vocoder, texture (10) | `master` (`dde91b3`) |
-| ⚠️ WRITTEN but **NOT built/verified** | comp, dyneq, exciter, gate, mbcomp, tplimit, transient (7) | branch `port/dynamics` (`5fe5ffc`) |
-| ⚠️ WRITTEN but **NOT built/verified** | bitcrush, verb (2) | branch `port/time-stereo` (`82db518`) |
-| ❌ **NOT STARTED** | delay, chorus, width, doubler, irverb (5) | — |
+| ✅ built + pedalboard-verified + **on master** | eq, clipper, sat, duck, deesser, flanger, phaser, tremolo, vocoder, texture, comp, dyneq, exciter, gate, mbcomp, tplimit, transient, bitcrush, verb (19) | `master` — re-verified 19/19 via `vst3/verify.py` on 2026-07-05 |
+| ❌ **NOT STARTED** | delay, chorus, width, doubler, irverb (5) | Python sources exist; not yet ported |
 
 ## 🎯 NEXT SESSION AGENDA (exact order)
-1. **Build + pedalboard-verify the 9 written modules** on `port/dynamics` + `port/time-stereo`. They are UNVERIFIED — they may not compile. Fix failures. (Worktrees: `~/Workspace/Personal/freefx-wt/{dynamics,time-stereo}`.)
+1. **Build + pedalboard-verify the 9 written modules** on `port/dynamics` + `port/time-stereo`. They are UNVERIFIED — they may not compile. Fix failures. (Worktrees: `(worktrees removed — branches merged to master)`.)
 2. **Write the 5 missing**: delay, chorus, width, doubler, irverb. Python sources exist; follow the proven pattern. Hints: `juce::dsp::Convolution` (irverb), `juce::dsp::DelayLine` (delay/chorus/doubler), M/S matrix + low-band mono (width). Assign unique PLUGIN_CODEs (used so far: Feq1 Fclp Fsat Fduk Fdes Ffln Fpha Ftrm Fvoc Ftex Fcmp Fdyn Fexc Fgat Fmbc Ftpl Ftrn Fbit Fvrb — pick Fdly Fcho Fwid Fdbl Firv).
 3. **Merge** `port/dynamics` + `port/time-stereo` (+ the 5 new) into master once each is verified.
 4. **One combined clean-checkout build** of all 24 VST3s → confirm they compile + load together.
