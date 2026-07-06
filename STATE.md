@@ -1,7 +1,7 @@
 # STATE — freefx (clean-room MIT audio effects suite)
 
 > Resume doc. Read first on session start. `/state` reads it, `/wrap` writes it.
-> Last touch: 2026-07-04 — audit. **26 Python effects + `ab` + `match` shipped & pushed.** VST3s: **19/19 built (clean build exit 0, explicit /usr/bin/cc — `~/.local/bin/cc` shadows the compiler) + 19/19 pedalboard-verified (`vst3/verify.py`) + installed to ~/Library/Audio/Plug-Ins/VST3 (20/20 incl. LoudMax load OK, adhoc-signed, no quarantine). 5 still not started: delay, chorus, width, doubler, irverb. master 13 commits ahead of origin — push gate (combined build) now PASSED, push awaits Jonathan.**
+> Last touch: 2026-07-05 — port. **ALL 24 VST3 ports DONE.** The last 5 (delay, chorus, width, doubler, irverb) were written + built + pedalboard-verified + signal-differential-verified (each ENGAGED, rms(out-dry) 0.028–0.070) this session. Full suite now **24/24 built (clean build exit 0, explicit /usr/bin/cc — `~/.local/bin/cc` shadows the compiler) + 24/24 pedalboard-verified (`vst3/verify.py`)**. 26 Python effects + `ab` + `match` shipped. Only the 3 WORLD-pitch modules (autotune/harmonizer/pitchpin) remain deliberately un-ported (offline, out of scope). master well ahead of origin — push awaits Jonathan.
 
 ## Mission anchor
 A complete, free, **MIT, clean-room** audio-effects suite that anyone can use — the legal answer to "make the paid plugins free for everyone." Built from public DSP only. Pairs with the music-gen work in the parent dir `..` (MusicOld — freefx now lives inside it, moved 2026-07-03). Recreational/for-fun lineage, but the repo is public (github.com/isndotbiz/freefx) and real.
@@ -19,16 +19,15 @@ Target: port 21 effects to JUCE VST3 (the 3 WORLD-pitch modules **autotune/harmo
 
 | State | Modules | Where |
 |-------|---------|-------|
-| ✅ built + pedalboard-verified + **on master** | eq, clipper, sat, duck, deesser, flanger, phaser, tremolo, vocoder, texture, comp, dyneq, exciter, gate, mbcomp, tplimit, transient, bitcrush, verb (19) | `master` — re-verified 19/19 via `vst3/verify.py` on 2026-07-05 |
-| ❌ **NOT STARTED** | delay, chorus, width, doubler, irverb (5) | Python sources exist; not yet ported |
+| ✅ built + pedalboard-verified + **on master** | eq, clipper, sat, duck, deesser, flanger, phaser, tremolo, vocoder, texture, comp, dyneq, exciter, gate, mbcomp, tplimit, transient, bitcrush, verb (19) | `master` — re-verified via `vst3/verify.py` 2026-07-05 |
+| ✅ **NEW** built + pedalboard + signal-differential verified | delay (Fdly), chorus (Fcho), width (Fwid), doubler (Fdbl), irverb (Firv) (5) | `master` — ported 2026-07-05; all ENGAGED (alter signal), all finite |
+| ❌ deliberately un-ported (offline WORLD-pitch, out of scope) | autotune, harmonizer, pitchpin (3) | never — need a different real-time algorithm |
 
 ## 🎯 NEXT SESSION AGENDA (exact order)
-1. **Build + pedalboard-verify the 9 written modules** on `port/dynamics` + `port/time-stereo`. They are UNVERIFIED — they may not compile. Fix failures. (Worktrees: `(worktrees removed — branches merged to master)`.)
-2. **Write the 5 missing**: delay, chorus, width, doubler, irverb. Python sources exist; follow the proven pattern. Hints: `juce::dsp::Convolution` (irverb), `juce::dsp::DelayLine` (delay/chorus/doubler), M/S matrix + low-band mono (width). Assign unique PLUGIN_CODEs (used so far: Feq1 Fclp Fsat Fduk Fdes Ffln Fpha Ftrm Fvoc Ftex Fcmp Fdyn Fexc Fgat Fmbc Ftpl Ftrn Fbit Fvrb — pick Fdly Fcho Fwid Fdbl Firv).
-3. **Merge** `port/dynamics` + `port/time-stereo` (+ the 5 new) into master once each is verified.
-4. **One combined clean-checkout build** of all 24 VST3s → confirm they compile + load together.
-5. **Push** master to origin — it is AHEAD of origin by the CMake refactor (`c4230ab`) + mod-special merge (`dde91b3`) + everything after. Nothing past `58d60ed` is pushed yet.
-6. Optional: install all 24 `.vst3` to `~/Library/Audio/Plug-Ins/VST3/` (3 already installed: eq, clipper, sat).
+1. **Push** master to origin — it is well AHEAD of origin (all 24 VST3 ports + the CMake refactor + everything past `58d60ed`). Push gate (combined 24/24 build + verify) has PASSED. Awaits Jonathan's go on the public repo.
+2. **Install the 5 new `.vst3`** to `~/Library/Audio/Plug-Ins/VST3/` if you want them in a DAW (delay, chorus, width, doubler, irverb) — adhoc-sign + de-quarantine like the earlier 19.
+3. Optional polish: the doubler's detune-via-delay-modulation and irverb's synthetic-plate IR are real-time reformulations of the offline Python (documented inline) — a listen test could tune modRate/decay if the character needs it.
+4. Optional: `match.py` behavioral A/B for the 5 new ports vs their Python sources.
 
 ## Anti-instructions / gotchas
 - **Verify-before-merge**: the 9 written modules are UNVERIFIED. Build + load each before merging to master.
