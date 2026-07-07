@@ -11,6 +11,7 @@ Examples:
   uv run freefx.py chain vocal.wav out.wav --preset vocal-modern --key A
   uv run freefx.py describe vocal.wav out.wav "hard tune, de-ess, add air, compress"
   uv run freefx.py run eq in.wav out.wav -- --band hpf:80::0.707
+  uv run freefx.py master mix.wav master.wav --profile both
   uv run freefx.py plugins
   uv run freefx.py verify-vst3
 """
@@ -29,9 +30,10 @@ PITCHPIN = HERE.parent / "pitchpin" / "pitchpin.py"
 
 TOOLS = [
     "autotune", "bitcrush", "chorus", "clipper", "comp", "deesser", "delay",
-    "doubler", "duck", "dyneq", "eq", "exciter", "flanger", "gate",
-    "harmonizer", "irverb", "mbcomp", "phaser", "sat", "texture", "tplimit",
-    "transient", "tremolo", "verb", "vocoder", "width",
+    "doubler", "duck", "dyneq", "eq", "exciter", "flanger", "formant", "gate",
+    "harmonizer", "irverb", "master_assist", "mbcomp", "phaser", "retro",
+    "rider", "sat", "texture", "timefx", "tplimit", "transient", "tremolo",
+    "verb", "vocoder", "width",
 ]
 
 
@@ -62,6 +64,8 @@ def cmd_chain(args: argparse.Namespace) -> int:
         cmd += ["--key", args.key]
     if args.scale:
         cmd += ["--scale", args.scale]
+    if args.bpm:
+        cmd += ["--bpm", str(args.bpm)]
     if args.dry_run:
         cmd.append("--dry-run")
     if args.keep_temp:
@@ -75,6 +79,8 @@ def cmd_describe(args: argparse.Namespace) -> int:
         cmd += ["--key", args.key]
     if args.scale:
         cmd += ["--scale", args.scale]
+    if args.bpm:
+        cmd += ["--bpm", str(args.bpm)]
     if args.dry_run:
         cmd.append("--dry-run")
     if args.keep_temp:
@@ -91,6 +97,20 @@ def cmd_run_tool(args: argparse.Namespace) -> int:
     if tool_args and tool_args[0] == "--":
         tool_args = tool_args[1:]
     return run(["uv", "run", str(script), args.input, args.output, *tool_args])
+
+
+def cmd_master(args: argparse.Namespace) -> int:
+    cmd = ["uv", "run", str(HERE / "master_assist.py"), args.input]
+    if args.output:
+        cmd.append(args.output)
+    cmd += ["--profile", args.profile]
+    if args.analyze:
+        cmd.append("--analyze")
+    if args.dry_run:
+        cmd.append("--dry-run")
+    if args.keep_temp:
+        cmd.append("--keep-temp")
+    return run(cmd)
 
 
 def cmd_plugins(_: argparse.Namespace) -> int:
@@ -127,6 +147,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--preset")
     p.add_argument("--key")
     p.add_argument("--scale", default="minor")
+    p.add_argument("--bpm", type=float)
     p.add_argument("--dry-run", action="store_true")
     p.add_argument("--keep-temp", action="store_true")
     p.set_defaults(func=cmd_chain)
@@ -137,6 +158,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("description")
     p.add_argument("--key")
     p.add_argument("--scale", default="minor")
+    p.add_argument("--bpm", type=float)
     p.add_argument("--dry-run", action="store_true")
     p.add_argument("--keep-temp", action="store_true")
     p.set_defaults(func=cmd_describe)
@@ -147,6 +169,15 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("output")
     p.add_argument("tool_args", nargs=argparse.REMAINDER)
     p.set_defaults(func=cmd_run_tool)
+
+    p = sub.add_parser("master", help="analyze + render SoundCloud/Spotify masters")
+    p.add_argument("input")
+    p.add_argument("output", nargs="?")
+    p.add_argument("--profile", choices=["soundcloud", "spotify", "both"], default="both")
+    p.add_argument("--analyze", action="store_true")
+    p.add_argument("--dry-run", action="store_true")
+    p.add_argument("--keep-temp", action="store_true")
+    p.set_defaults(func=cmd_master)
 
     p = sub.add_parser("plugins", help="list installed freefx VST3 plugins")
     p.set_defaults(func=cmd_plugins)

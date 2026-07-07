@@ -49,6 +49,7 @@ PRESETS: dict[str, list[Step]] = {
     "vocal-modern": [
         Step("autotune", ("--retune-ms", "25", "--strength", "0.85")),
         Step("deesser", ("--freq", "6500", "--threshold", "-30")),
+        Step("rider", ("--target-db", "-18", "--max-gain-db", "6")),
         Step("comp", ("--threshold", "-20", "--ratio", "4", "--attack-ms", "4", "--release-ms", "100", "--makeup", "auto")),
         Step("sat", ("--drive", "4", "--tone-hz", "12000", "--mix", "0.6")),
         Step("exciter", ("--freq", "5500", "--amount", "3")),
@@ -91,13 +92,56 @@ PRESETS: dict[str, list[Step]] = {
         Step("width", ("--width", "1.25", "--mono-hz", "120")),
         Step("tplimit", ("--ceiling", "-1")),
     ],
+    "vocal-crisp": [
+        Step("rider", ("--target-db", "-18", "--max-gain-db", "6")),
+        Step("deesser", ("--freq", "6800", "--threshold", "-30")),
+        Step("comp", ("--threshold", "-20", "--ratio", "3", "--attack-ms", "5", "--release-ms", "110", "--makeup", "auto")),
+        Step("eq", ("--band", "hpf:90::0.707", "--band", "peak:250:-2:1.0", "--band", "highshelf:11000:2.5:0.7")),
+        Step("exciter", ("--freq", "6500", "--amount", "4")),
+        Step("tplimit", ("--ceiling", "-1")),
+    ],
+    "vocal-juice": [
+        Step("autotune", ("--retune-ms", "30", "--strength", "0.92")),
+        Step("formant", ("--formant", "-1.5",)),
+        Step("deesser", ("--freq", "6500", "--threshold", "-30")),
+        Step("rider", ("--target-db", "-18", "--max-gain-db", "6")),
+        Step("comp", ("--threshold", "-20", "--ratio", "4", "--attack-ms", "4", "--release-ms", "100", "--makeup", "auto")),
+        Step("sat", ("--drive", "4", "--tone-hz", "12000", "--mix", "0.6")),
+        Step("doubler", ("--voices", "2", "--detune", "8", "--mix", "0.15")),
+        Step("delay", ("--note", "1/4", "--feedback", "0.35", "--mix", "0.22", "--pingpong", "--duck", "0.7")),
+        Step("verb", ("--roomsize", "0.75", "--damp", "0.4", "--wet", "0.18", "--predelay-ms", "25", "--tail-sec", "1.6")),
+        Step("tplimit", ("--ceiling", "-1")),
+    ],
+    "master-soundcloud": [
+        Step("eq", ("--band", "hpf:28::0.707")),
+        Step("mbcomp", ("--xover", "200", "2500", "--ratio", "2.2")),
+        Step("sat", ("--drive", "3", "--tone-hz", "14000", "--mix", "0.5")),
+        Step("clipper", ("--drive", "3", "--ceiling", "-0.8")),
+        Step("tplimit", ("--target-lufs", "-9", "--ceiling", "-1")),
+    ],
+    "master-spotify": [
+        Step("eq", ("--band", "hpf:28::0.707")),
+        Step("mbcomp", ("--xover", "200", "2500", "--ratio", "1.8")),
+        Step("tplimit", ("--target-lufs", "-14", "--ceiling", "-1")),
+    ],
+    "retro-vocal": [
+        Step("deesser", ("--freq", "6500", "--threshold", "-30")),
+        Step("comp", ("--threshold", "-20", "--ratio", "3", "--attack-ms", "5", "--release-ms", "120", "--makeup", "auto")),
+        Step("retro", ("--age", "0.45", "--wobble", "0.15", "--dropout", "0", "--mix", "0.85")),
+        Step("tplimit", ("--ceiling", "-1")),
+    ],
+    "stutter-hook": [
+        Step("timefx", ("--mode", "stutter", "--grid", "1/16", "--pattern", "x---x---")),
+        Step("tplimit", ("--ceiling", "-1")),
+    ],
 }
 
 
 CANONICAL_ORDER = [
-    "gate", "pitchpin", "autotune", "deesser", "eq", "dyneq", "comp", "mbcomp", "transient",
-    "sat", "exciter", "bitcrush", "texture", "doubler", "chorus", "flanger",
-    "phaser", "tremolo", "delay", "verb", "width", "clipper", "tplimit",
+    "gate", "pitchpin", "autotune", "formant", "deesser", "rider", "eq", "dyneq",
+    "comp", "mbcomp", "transient", "sat", "exciter", "bitcrush", "texture", "retro",
+    "doubler", "chorus", "flanger", "phaser", "tremolo", "timefx", "delay", "verb",
+    "width", "clipper", "tplimit",
 ]
 
 
@@ -117,6 +161,12 @@ DESCRIBE_STEPS: dict[str, Step] = {
     "wide": Step("width", ("--width", "1.35", "--mono-hz", "120")),
     "double": Step("doubler", ("--voices", "2", "--detune", "10", "--mix", "0.22")),
     "lofi": Step("texture", ("--crackle", "0.25", "--hiss", "0.12", "--wow", "0.08")),
+    "rider": Step("rider", ("--target-db", "-18", "--max-gain-db", "6")),
+    "retro": Step("retro", ("--age", "0.5",)),
+    "stutter": Step("timefx", ("--mode", "stutter", "--grid", "1/16", "--pattern", "x---x---")),
+    "tapestop": Step("timefx", ("--mode", "tapestop",)),
+    "halftime": Step("timefx", ("--mode", "halftime",)),
+    "deep_voice": Step("formant", ("--formant", "-2",)),
 }
 
 
@@ -162,6 +212,18 @@ def chain_from_description(text: str) -> list[Step]:
         add("double")
     if any(w in lower for w in ("lofi", "lo-fi", "vinyl", "dusty")):
         add("lofi")
+    if any(w in lower for w in ("rider", "ride the", "consistent volume", "even volume", "level the vocal")):
+        add("rider")
+    if any(w in lower for w in ("retro", "vintage", "cassette", "aged", "old tape", "worn")):
+        add("retro")
+    if "stutter" in lower:
+        add("stutter")
+    if any(w in lower for w in ("tape stop", "tape-stop", "tapestop")):
+        add("tapestop")
+    if any(w in lower for w in ("halftime", "half-time", "half time", "half speed")):
+        add("halftime")
+    if any(w in lower for w in ("deep voice", "deeper voice", "darker voice", "formant")):
+        add("deep_voice")
 
     if not steps:
         steps = list(PRESETS["vocal-clean"])
@@ -177,6 +239,19 @@ def sort_steps(steps: list[Step]) -> list[Step]:
     for step in steps:
         dedup[step.name] = step
     return sorted(dedup.values(), key=lambda s: order.get(s.name, 999))
+
+
+def with_bpm(step: Step, bpm: float | None) -> Step:
+    if not bpm:
+        return step
+    args = list(step.args)
+    if step.name == "timefx" and "--bpm" not in args:
+        args.extend(["--bpm", f"{bpm:g}"])
+    elif step.name == "delay" and "--bpm" not in args and "--time-ms" not in args:
+        args.extend(["--bpm", f"{bpm:g}"])
+    else:
+        return step
+    return Step(step.name, tuple(args))
 
 
 def with_key_scale(step: Step, key: str | None, scale: str | None) -> Step:
@@ -227,6 +302,7 @@ def main() -> int:
     parser.add_argument("--describe", help="plain-language sound description")
     parser.add_argument("--key", help="musical key for pitch effects, e.g. A, C#, Eb")
     parser.add_argument("--scale", default="minor", help="scale for pitch effects")
+    parser.add_argument("--bpm", type=float, help="tempo for timefx / tempo-synced delay steps")
     parser.add_argument("--list-presets", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--keep-temp", action="store_true")
@@ -245,6 +321,7 @@ def main() -> int:
     else:
         steps = list(PRESETS[args.preset or "vocal-clean"])
     steps = [with_key_scale(step, args.key, args.scale) for step in steps]
+    steps = [with_bpm(step, args.bpm) for step in steps]
 
     render_chain(Path(args.input).expanduser(), Path(args.output).expanduser(), steps, dry_run=args.dry_run, keep_temp=args.keep_temp)
     return 0

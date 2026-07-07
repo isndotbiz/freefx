@@ -13,6 +13,7 @@ uv run freefx.py list
 uv run freefx.py describe vocal.wav out.wav "hard tune, de-ess, add air, compress" --key A
 uv run freefx.py chain vocal.wav out.wav --preset vocal-modern --key A --scale minor
 uv run freefx.py run eq in.wav out.wav -- --band hpf:80::0.707
+uv run freefx.py master mix.wav master.wav --profile both
 uv run freefx.py plugins
 uv run freefx.py verify-vst3
 ```
@@ -35,7 +36,10 @@ uv run chain.py in.wav out.wav --preset lofi --dry-run
 uv run chain.py --list-presets
 ```
 Current presets: `vocal-clean`, `vocal-modern`, `vocal-hard-tune`,
-`vocal-natural-tune`, `master-loud`, `trap-loud`, `lofi`, `space`.
+`vocal-natural-tune`, `vocal-crisp`, `vocal-juice`, `master-loud`, `trap-loud`,
+`master-soundcloud`, `master-spotify`, `lofi`, `retro-vocal`, `stutter-hook`,
+`space`. Pass `--bpm` to tempo-lock `timefx`/`delay` steps
+(e.g. `--preset stutter-hook --bpm 150`).
 
 ### `tplimit` — true-peak limiter / loudness maximizer
 Oversampled look-ahead brickwall limiting. Catches inter-sample peaks so the output never exceeds the ceiling in dBTP; `--target-lufs` auto-calibrates gain to a loudness target.
@@ -44,6 +48,49 @@ uv run tplimit.py in.wav out.wav --ceiling -1
 uv run tplimit.py in.wav out.wav --target-lufs -9 --ceiling -1   # maximize, TP-safe
 ```
 *Verified: maximizes to the target LUFS while keeping true-peak ≤ ceiling (e.g. −8.8 LUFS @ −1.2 dBTP).*
+
+### `master_assist` — command-line mastering assistant
+Analyze first (integrated + short-term LUFS, sample peak, true peak dBTP, crest, spectral tilt, stereo width, bass-mono check), then render two masters through the suite tools with every corrective move printed with its measured reason: a SoundCloud-loud master (~−9 LUFS) and a Spotify/dynamic master (−14 LUFS), both −1 dBTP safe.
+```bash
+uv run master_assist.py mix.wav master.wav            # renders master-soundcloud.wav + master-spotify.wav
+uv run master_assist.py mix.wav --analyze             # analysis block only
+uv run freefx.py master mix.wav master.wav --profile soundcloud
+```
+*Verified: synthetic mix @ −20 LUFS rendered to −9.45 LUFS / −1.07 dBTP (soundcloud) and −14.40 LUFS / −1.19 dBTP (spotify), re-measured independently after render.*
+
+### `rider` — vocal gain rider
+Rides the fader before compression: slow, smooth gain toward a target short-window RMS, so the compressor works on an already-even vocal. dB-domain attack/release, ±max clamp, silence floor (won't ride breaths up), optional lookahead and automation CSV export.
+```bash
+uv run rider.py vox.wav out.wav --target-db -18 --max-gain-db 6
+uv run rider.py vox.wav out.wav --target-db -18 --write-automation ride.csv
+```
+Params: `--target-db --window-ms --max-gain-db --attack-ms --release-ms --lookahead-ms --floor-db --write-automation`. *Verified: −30/−12 dBFS alternating test leveled toward −18 (quiet +3.7 dB, loud −4.2 dB), gain never past ±6, no clipping, stereo channels ride identically.*
+
+### `timefx` — rhythmic time effects (stutter / tape stop / half-time / gate)
+The trap arrangement toolbox: pattern-based stutter retriggers, pitch-dropping tape stop, octave-down half-time, and a click-free rhythmic gate — all tempo-locked to `--bpm`/`--grid`, applied to the whole file or a `--start-s/--end-s` region (outside the region passes through untouched).
+```bash
+uv run timefx.py hook.wav out.wav --mode stutter --bpm 140 --grid 1/16 --pattern "x---x---"
+uv run timefx.py mix.wav out.wav --mode tapestop --bpm 140 --length 4        # beat-long tape stop
+uv run timefx.py bridge.wav out.wav --mode halftime --start-s 8 --end-s 16   # octave-down half speed
+uv run timefx.py pad.wav out.wav --mode gate --bpm 140 --pattern "x-x-xx--"
+```
+`halftime --keep-pitch` shells to the `rubberband` CLI when installed, else falls back to the classic pitch-drop with a note. *Verified: stutter slice correlation +1.000, tapestop frequency monotonically → 0, halftime exact octave drop (588→294 Hz) with region doubled, gate closed steps at true zero, out-of-region audio bit-identical.*
+
+### `formant` — pitch/formant color (alter-ego voice)
+Pure transpose + independent formant shift with no scale snapping — the deep-dark-voice / chipmunk / gender-bend color tool, distinct from `autotune`/`pitchpin`. WORLD vocoder, monophonic.
+```bash
+uv run formant.py vox.wav out.wav --pitch -5 --formant -3          # deep alter-ego
+uv run formant.py vox.wav out.wav --formant 3 --mix 0.6 --fast     # brighter color, blended
+```
+Params: `--pitch` (semitones, fractional), `--formant` (negative = deeper), `--mix`, `--fast` (dio vs harvest). *Verified: `--pitch -5` moved median F0 exactly −5.000 st; `--formant -4` left F0 at +0.00 cents while the envelope centroid dropped 608→496 Hz.*
+
+### `retro` — one-knob lo-fi color macro
+Vintage-gear aging in one command: hiss + crackle bed, wow/flutter wobble (cents-accurate), tape saturation, bitcrush, tone tilt, and crossfaded dropouts, in a fixed documented order. `--age` sets everything; any sub-flag overrides its component; `--seed` makes every render reproducible.
+```bash
+uv run retro.py beat.wav beat-aged.wav --age 0.6
+uv run retro.py vox.wav out.wav --age 0.45 --wobble 0.15 --dropout 0 --mix 0.85   # vocal-safe
+```
+Params: `--age --noise --wobble --drive --bits --tone --dropout --mix --seed`. *Verified: noise floor scales −51.7→−43.1 dBFS from age 0.3→0.8, bandwidth narrows 20.9→11.4 kHz with darker tone, same seed = bit-identical render, wobble 0.8 = 5.4 Hz F0 wander on a 440 Hz tone.*
 
 ### `eq` — parametric EQ
 Biquad cascade (Robert Bristow-Johnson's Audio EQ Cookbook). Any number of bands: `peak | lowshelf | highshelf | hpf | lpf`. Prints the actual gain at each band center as a self-check.
@@ -132,7 +179,7 @@ uv run width.py      mix.wav out.wav --width 1.4 --mono-hz 120       # M/S stere
 uv run mbcomp.py     master.wav out.wav --xover 200 2500 --ratio 3   # 3-band multiband compressor (exact split)
 uv run harmonizer.py vox.wav out.wav --interval -12 --mix 0.4        # pitch harmonizer (oct/5th, WORLD)
 uv run bitcrush.py   loop.wav out.wav --bits 6 --downsample 3        # bit/rate crusher (lo-fi)
-uv run delay.py      vox.wav out.wav --time-ms 375 --feedback 0.4 --pingpong   # stereo/ping-pong throw
+uv run delay.py      vox.wav out.wav --bpm 160 --note 1/8d --duck 0.7 --pingpong  # tempo-synced ducked throw (or --time-ms)
 uv run chorus.py     pad.wav out.wav --voices 3 --rate 0.6 --depth 4 # 80s modulated-delay chorus
 uv run duck.py       pads.wav out.wav --key kick.wav --amount 9      # sidechain pump / ducking
 uv run deesser.py    vox.wav out.wav --freq 6500 --threshold -30     # dedicated split de-esser
@@ -146,7 +193,7 @@ uv run irverb.py     vox.wav out.wav --ir plate.wav --mix 0.25       # convoluti
 *All verified: exciter raises HF energy, doubler/width/chorus create measured stereo width, gate attenuates sub-threshold frames, mbcomp reconstructs to −240 dB at ratio 1:1, harmonizer adds +5 dB sub-octave, bitcrush/clipper/transient pass their signal tests.*
 
 ## Install & run
-Requires [`uv`](https://docs.astral.sh/uv/) — it resolves all deps (numpy, scipy, soundfile; `verb` and `dyneq` also pull `numba` for JIT) automatically. I/O: WAV/FLAC/OGG (libsndfile). `--target-lufs` in `tplimit` also needs `ffmpeg` on PATH for loudness measurement.
+Requires [`uv`](https://docs.astral.sh/uv/) — it resolves all deps (numpy, scipy, soundfile; `verb` and `dyneq` also pull `numba` for JIT; `formant` pulls `pyworld`; `master_assist` pulls `pyloudnorm`) automatically. I/O: WAV/FLAC/OGG (libsndfile). `--target-lufs` in `tplimit` also needs `ffmpeg` on PATH for loudness measurement. `timefx --keep-pitch` uses the `rubberband` CLI when installed. Quick health check of every new tool + preset: `uv run smoke.py`.
 
 ## Principle: clean-room only
 Every effect here is built from **published DSP** (EQ cookbook, look-ahead limiting, oversampling for true-peak). No commercial plugin was decompiled or reverse-engineered — that would be illegal *and* un-licensable as open source. We build the math from scratch and stand on prior open work (e.g. [Airwindows](https://www.airwindows.com/), public-domain).
@@ -175,6 +222,12 @@ Every effect here is built from **published DSP** (EQ cookbook, look-ahead limit
 - [x] `vocoder` — channel vocoder (robot/talkbox vocals) ✅
 - [x] `texture` — vinyl crackle / tape hiss / wow lo-fi ✅
 - [x] `irverb` — convolution reverb (load real IRs) ✅
+- [x] `rider` — vocal gain rider (auto fader before comp) ✅
+- [x] `master_assist` — analyze + SoundCloud/Spotify mastering assistant ✅
+- [x] `delay` tempo-sync (`--bpm`/`--note` incl. dotted/triplet) + wet ducking (`--duck`) ✅
+- [x] `timefx` — stutter / tape stop / half-time / rhythmic gate ✅
+- [x] `formant` — pitch/formant color tool (no scale snap) ✅
+- [x] `retro` — one-knob lo-fi color macro (seeded, reproducible) ✅
 - [x] JUCE VST3 ports — `eq`, `clipper`, `sat` built + pedalboard-verified (`vst3/`) ✅
 - [ ] VST3 ports of the remaining 23 modules — the scaling frontier (same CMake pattern)
 

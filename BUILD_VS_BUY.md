@@ -27,38 +27,41 @@ These projects have active open-source code or useful communities. Prefer wrappi
 | Fresh Air / air enhancer | `exciter.py`, high shelf in `eq.py`. |
 | Valhalla / TAL reverb for basic space | `verb.py`, `irverb.py`, plus `space` chain preset. |
 | MicroShift-style width | `doubler.py`, `width.py`, `chorus.py`. |
-| H-Delay basics | `delay.py` covers milliseconds and ping-pong. |
-| RC-20 basics | `texture.py`, `sat.py`, `bitcrush.py`, `lofi` chain preset. |
-| Ozone Elements basics | `master-loud` and `trap-loud` chains using `eq`, `mbcomp`, `sat`, `clipper`, `tplimit`. |
+| H-Delay basics | `delay.py` covers milliseconds, ping-pong, tempo sync (`--bpm`/`--note`), and wet ducking (`--duck`). |
+| RC-20 basics | `retro.py` one-knob macro; `texture.py`, `sat.py`, `bitcrush.py`, `lofi` chain preset for the pieces. |
+| Ozone Elements basics | `master_assist.py` (analyze + dual-target render); `master-loud`, `trap-loud`, `master-soundcloud`, `master-spotify` chains. |
 
-## Worth Building Next
+## Worth Building Next — ✅ ALL BUILT (2026-07-04)
 
 These are small, command-line-friendly subsets of commercial apps that fit the actual workflow.
+All six shipped, verified on synthetic renders, and wired into `freefx.py` + `chain.py`
+(presets: `vocal-crisp`, `vocal-juice`, `master-soundcloud`, `master-spotify`, `retro-vocal`,
+`stutter-hook`; rider added to `vocal-modern` before comp). Smoke test: `uv run smoke.py`.
 
-1. `rider.py` — vocal gain rider
+1. ✅ `rider.py` — vocal gain rider
    - Replaces the useful part of Waves Vocal Rider.
    - Input: vocal stem.
    - Output: level-smoothed vocal before compression.
    - Core behavior: target RMS/LUFS window, max gain change, attack/release, optional automation CSV.
 
-2. `master_assist.py` — one-click mastering assistant
+2. ✅ `master_assist.py` — one-click mastering assistant
    - Replaces the useful part of Ozone Elements for this lane.
    - Analyze LUFS, true peak, crest factor, spectral tilt, bass mono risk.
    - Render two outputs: SoundCloud loud master and Spotify/dynamic master.
 
-3. `delay.py` upgrade — tempo sync and ducking
+3. ✅ `delay.py` upgrade — tempo sync and ducking (`--bpm`, `--note` w/ dotted+triplet, `--duck`)
    - Add `--bpm`, `--note 1/4|1/8|1/8d|1/16`, and `--duck`.
    - This covers the useful H-Delay / Tempo Delay workflow.
 
-4. `timefx.py` — stutter, tape stop, half-time, repeat throws
+4. ✅ `timefx.py` — stutter, tape stop, half-time, rhythmic gate
    - Replaces the useful parts of Gross Beat / ShaperBox for trap effects.
    - Command-line patterns: `--pattern`, `--grid`, `--mix`, `--bpm`.
 
-5. `formant.py` — dedicated pitch/formant color tool
+5. ✅ `formant.py` — dedicated pitch/formant color tool
    - Focused Little AlterBoy subset.
    - Separate from full autotune: transpose/formant shift/dry-wet for alter-ego textures.
 
-6. `retro.py` — one-knob lo-fi color macro
+6. ✅ `retro.py` — one-knob lo-fi color macro (seeded/reproducible)
    - Bundles `texture`, `sat`, `bitcrush`, tone filtering, dropout/wobble.
    - Replaces the useful RC-20 workflow without trying to copy its UI.
 

@@ -5,3 +5,6 @@ __pycache__/
 .DS_Store
 .venv/
 *.cal.wav
+
+# Local Claude Code project config (not for public repo)
+.claude/
