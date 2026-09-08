@@ -113,25 +113,56 @@ def cmd_master(args: argparse.Namespace) -> int:
     return run(cmd)
 
 
-def cmd_plugins(_: argparse.Namespace) -> int:
+def _vst3_roots() -> list:
+    """User + system VST3 dirs per OS, plus the in-repo build tree.
+
+    Was macOS-only, so `plugins`/`verify-vst3` found nothing on Linux/Windows
+    even with bundles built. VST3 is cross-platform; the install dir is not.
+    """
+    home = Path.home()
     roots = [
-        Path.home() / "Library" / "Audio" / "Plug-Ins" / "VST3",
+        # macOS
+        home / "Library" / "Audio" / "Plug-Ins" / "VST3",
         Path("/Library/Audio/Plug-Ins/VST3"),
+        # Linux
+        home / ".vst3",
+        Path("/usr/lib/vst3"), Path("/usr/local/lib/vst3"),
+        # Windows
+        Path("C:/Program Files/Common Files/VST3"),
+        # in-repo build tree (FetchContent artefacts land here)
+        HERE / "vst3" / "build",
     ]
-    seen = []
+    return roots
+
+
+def cmd_plugins(_: argparse.Namespace) -> int:
+    roots = _vst3_roots()
+    seen = {}
     for root in roots:
-        for item in sorted(glob.glob(str(root / "freefx-*.vst3"))):
-            p = Path(item)
-            target = os.readlink(p) if p.is_symlink() else "real-dir"
-            seen.append(p.name)
-            print(f"{p.name}\t{target}")
-    print(f"\n{len(seen)} freefx VST3 plugin(s) installed")
+        # flat (installed) and nested (build tree) both matched
+        for pat in (str(root / "freefx-*.vst3"), str(root / "**" / "freefx-*.vst3")):
+            for item in sorted(glob.glob(pat, recursive=True)):
+                p = Path(item)
+                if p.name in seen:
+                    continue
+                target = os.readlink(p) if p.is_symlink() else str(p)
+                seen[p.name] = target
+                print(f"{p.name}\t{target}")
+    print(f"\n{len(seen)} freefx VST3 plugin(s) found")
     return 0
 
 
 def cmd_verify_vst3(args: argparse.Namespace) -> int:
-    root = args.path or str(Path.home() / "Library" / "Audio" / "Plug-Ins" / "VST3")
-    return run(["uv", "run", str(HERE / "vst3" / "verify.py"), root])
+    if args.path:
+        roots = [args.path]
+    else:
+        roots = [str(r) for r in _vst3_roots() if Path(r).exists()]
+        if not roots:
+            print("no VST3 directory found on this system"); return 1
+    rc = 0
+    for root in roots:
+        rc = run(["uv", "run", str(HERE / "vst3" / "verify.py"), root]) or rc
+    return rc
 
 
 def build_parser() -> argparse.ArgumentParser:

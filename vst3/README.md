@@ -1,16 +1,43 @@
 # freefx VST3 plugins
 
-Clean-room JUCE/VST3 ports of three pure-DSP `freefx` modules. The DSP math is
-ported from the project's own clean-room Python scripts (`eq.py`, `clipper.py`,
-`sat.py`), which are themselves built from public textbook DSP (Robert
-Bristow-Johnson's *Audio EQ Cookbook*, oversampled waveshaping). **No commercial
-plugin was referenced, decompiled, or copied.** MIT licensed.
+Clean-room JUCE/VST3 ports of the pure-DSP `freefx` modules. The DSP math is
+ported from the project's own clean-room Python scripts, which are themselves
+built from public textbook DSP (Robert Bristow-Johnson's *Audio EQ Cookbook*,
+oversampled waveshaping, Freeverb, standard M/S). **No commercial plugin was
+referenced, decompiled, or copied.** MIT licensed.
 
-| Plugin            | Source        | DSP                                                                 |
-|-------------------|---------------|---------------------------------------------------------------------|
-| **freefx-eq**     | `eq.py`       | 3-band RBJ biquad cascade: HPF → peak → high-shelf                   |
-| **freefx-clipper**| `clipper.py`  | 4× oversampled soft-`tanh` / hard clip; drive + ceiling + hard + mix |
-| **freefx-sat**    | `sat.py`      | 4× oversampled asymmetric-`tanh` saturation; drive + bias + tone + mix |
+All 24 modules now have a VST3 target (auto-discovered from each
+`<module>/module.cmake`); the three-plugin list this file used to carry was from
+the first port and was stale. Each is a `juce::AudioProcessor` with an
+`AudioProcessorValueTreeState` and a `GenericAudioProcessorEditor` (no custom GUI
+in v1); parameters mirror the Python CLI flags.
+
+| Plugin | Source | DSP |
+|--------|--------|-----|
+| **freefx-bitcrush** | `bitcrush.py` | bit-depth + sample-rate crusher (lo-fi texture). |
+| **freefx-chorus** | `chorus.py` | chorus (the 80s synth-pad signature). |
+| **freefx-clipper** | `clipper.py` | soft/hard clipper (the modern trap-loudness tool). |
+| **freefx-comp** | `comp.py` | full-band compressor (with de-esser mode). |
+| **freefx-deesser** | `deesser.py` | de-esser (tame sibilance). |
+| **freefx-delay** | `delay.py` | stereo / ping-pong feedback delay (vocal throws). |
+| **freefx-doubler** | `doubler.py` | vocal doubler / ADT / stereo widener. |
+| **freefx-duck** | `duck.py` | sidechain ducking / pump. |
+| **freefx-dyneq** | `dyneq.py` | dynamic EQ (per-band compression / expansion). |
+| **freefx-eq** | `eq.py` | parametric EQ (biquad cascade, RBJ cookbook). |
+| **freefx-exciter** | `exciter.py` | HF harmonic exciter (air / "crisp" / sparkle). |
+| **freefx-flanger** | `flanger.py` | flanger (jet-sweep comb modulation). |
+| **freefx-gate** | `gate.py` | noise gate / downward expander. |
+| **freefx-irverb** | `irverb.py` | convolution reverb (real spaces / plate IRs). |
+| **freefx-mbcomp** | `mbcomp.py` | 3-band multiband compressor (master glue). |
+| **freefx-phaser** | `phaser.py` | phaser (swept all-pass notches). |
+| **freefx-sat** | `sat.py` | tape / analog saturation (warmth, grit, glue). |
+| **freefx-texture** | `texture.py` | lo-fi texture (vinyl crackle + tape hiss + wow). |
+| **freefx-tplimit** | `tplimit.py` | true-peak brickwall limiter / loudness maximizer. |
+| **freefx-transient** | `transient.py` | transient shaper (attack/sustain designer). |
+| **freefx-tremolo** | `tremolo.py` | tremolo / auto-pan (amplitude LFO). |
+| **freefx-verb** | `verb.py` | algorithmic reverb (Freeverb-style: parallel damped combs + series allpass). |
+| **freefx-vocoder** | `vocoder.py` | channel vocoder (robot / talkbox vocals). |
+| **freefx-width** | `width.py` | stereo width (M/S) + bass mono-maker. |
 
 Each plugin is a `juce::AudioProcessor` driven by an `AudioProcessorValueTreeState`,
 with a `GenericAudioProcessorEditor` (no custom GUI in v1). Parameters mirror the
@@ -40,7 +67,7 @@ vst3/build/freefx_sat_artefacts/Release/VST3/freefx-sat.vst3
 If the JUCE clone/build ever fails, bump `GIT_TAG` in `vst3/CMakeLists.txt`
 (`FetchContent_Declare(JUCE …)`) to a newer stable JUCE tag.
 
-## Status: all three built + verified (pedalboard load + process)
+## Status: all modules have targets; verify with `uv run vst3/verify.py`
 
 Verified on 2026-06-24, macOS arm64, with `pedalboard`. Each plugin loads,
 processes a 1 s / 440 Hz sine at 44.1 kHz, and returns finite output:
