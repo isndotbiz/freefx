@@ -1,0 +1,482 @@
+{
+  "ab.py": {
+    "mtime": 1782618471.93545,
+    "seen": 1789989786.54366,
+    "ast_hash": "13ab37230ce5a8f89716fc9b2c8f423f",
+    "semantic_hash": ""
+  },
+  "autotune.py": {
+    "mtime": 1782618471.93545,
+    "seen": 1789989786.5436623,
+    "ast_hash": "ebe8246fc5c78cba780af1b2b27078a1",
+    "semantic_hash": ""
+  },
+  "bitcrush.py": {
+    "mtime": 1782618471.93545,
+    "seen": 1789989786.5436633,
+    "ast_hash": "570a50ffd6b08f909ce79debaaa31d2d",
+    "semantic_hash": ""
+  },
+  "chain.py": {
+    "mtime": 1788115285.110459,
+    "seen": 1789989786.5436642,
+    "ast_hash": "8ef551c264452303f82e2235ff46be21",
+    "semantic_hash": ""
+  },
+  "chorus.py": {
+    "mtime": 1782618471.93545,
+    "seen": 1789989786.543665,
+    "ast_hash": "0d7c520789c743916bd9ab2dd7315816",
+    "semantic_hash": ""
+  },
+  "clipper.py": {
+    "mtime": 1782618471.93545,
+    "seen": 1789989786.543666,
+    "ast_hash": "881d52464c921535d7f36a7fcfdd9ce4",
+    "semantic_hash": ""
+  },
+  "comp.py": {
+    "mtime": 1782618471.93645,
+    "seen": 1789989786.5436666,
+    "ast_hash": "2c786c229f9347593a199378dd79f477",
+    "semantic_hash": ""
+  },
+  "deesser.py": {
+    "mtime": 1782618471.93645,
+    "seen": 1789989786.5436733,
+    "ast_hash": "d4e81e092c7d43d117bf0549df3562a9",
+    "semantic_hash": ""
+  },
+  "delay.py": {
+    "mtime": 1788115285.110459,
+    "seen": 1789989786.5436747,
+    "ast_hash": "3cce4c851f505d28a05a90ecdaabc991",
+    "semantic_hash": ""
+  },
+  "doubler.py": {
+    "mtime": 1782618471.93645,
+    "seen": 1789989786.5436754,
+    "ast_hash": "24262f65164edea3ea9c95a382967048",
+    "semantic_hash": ""
+  },
+  "duck.py": {
+    "mtime": 1782618471.93645,
+    "seen": 1789989786.5436761,
+    "ast_hash": "661cbc49ed90095b6ebb86ac1302e09e",
+    "semantic_hash": ""
+  },
+  "dyneq.py": {
+    "mtime": 1782618471.93645,
+    "seen": 1789989786.5436766,
+    "ast_hash": "4076961514045792ab14c502f21fff0c",
+    "semantic_hash": ""
+  },
+  "eq.py": {
+    "mtime": 1782618471.93645,
+    "seen": 1789989786.543677,
+    "ast_hash": "fc0de07094f492f5f2182fda1d740b15",
+    "semantic_hash": ""
+  },
+  "exciter.py": {
+    "mtime": 1782618471.93645,
+    "seen": 1789989786.5436778,
+    "ast_hash": "c0603cad9ed05148342bc515a049603b",
+    "semantic_hash": ""
+  },
+  "finish.py": {
+    "mtime": 1788837049.8577015,
+    "seen": 1789989786.5436783,
+    "ast_hash": "a8da1494e73c61b231ef88b660a2b2c5",
+    "semantic_hash": ""
+  },
+  "flanger.py": {
+    "mtime": 1782618471.9374502,
+    "seen": 1789989786.5436788,
+    "ast_hash": "a3f9b3f6ed98359eb095a1add9eee57b",
+    "semantic_hash": ""
+  },
+  "formant.py": {
+    "mtime": 1788115285.110459,
+    "seen": 1789989786.5436792,
+    "ast_hash": "21842d8966ae45477cb3047fccbbb591",
+    "semantic_hash": ""
+  },
+  "freefx.py": {
+    "mtime": 1788834028.333876,
+    "seen": 1789989786.5436797,
+    "ast_hash": "1eefd2137852e19e0edb0318e13fd1ca",
+    "semantic_hash": ""
+  },
+  "gate.py": {
+    "mtime": 1782618471.9374502,
+    "seen": 1789989786.5436804,
+    "ast_hash": "914313dc0cf5cc275fa6bcabcfc3ef1d",
+    "semantic_hash": ""
+  },
+  "harmonizer.py": {
+    "mtime": 1782618471.9374502,
+    "seen": 1789989786.5436814,
+    "ast_hash": "444fffe910c4cc0a086f0593ed200c9f",
+    "semantic_hash": ""
+  },
+  "irverb.py": {
+    "mtime": 1782618471.9374502,
+    "seen": 1789989786.543682,
+    "ast_hash": "fdef922786e81632b04a8f47a2344899",
+    "semantic_hash": ""
+  },
+  "master_assist.py": {
+    "mtime": 1788115285.110459,
+    "seen": 1789989786.5436826,
+    "ast_hash": "c2337461bd13160bbd7018bbacb80621",
+    "semantic_hash": ""
+  },
+  "master_match.py": {
+    "mtime": 1788836872.8702383,
+    "seen": 1789989786.5436833,
+    "ast_hash": "c727f8333423ad9933bdbe9f2b6fedee",
+    "semantic_hash": ""
+  },
+  "match.py": {
+    "mtime": 1782618471.9374502,
+    "seen": 1789989786.5436838,
+    "ast_hash": "71f8e15f55dc59298370d7088231d064",
+    "semantic_hash": ""
+  },
+  "mbcomp.py": {
+    "mtime": 1782618471.93845,
+    "seen": 1789989786.5436842,
+    "ast_hash": "5046bb9c3dddf9c847eac66a0780e841",
+    "semantic_hash": ""
+  },
+  "phaser.py": {
+    "mtime": 1782618471.93845,
+    "seen": 1789989786.5436852,
+    "ast_hash": "3251555d0b900853248861edd7672ebb",
+    "semantic_hash": ""
+  },
+  "retro.py": {
+    "mtime": 1788115285.110459,
+    "seen": 1789989786.5436857,
+    "ast_hash": "f8c67df639e48c7232340cba0ed56442",
+    "semantic_hash": ""
+  },
+  "rider.py": {
+    "mtime": 1788115285.110459,
+    "seen": 1789989786.5436862,
+    "ast_hash": "92ae09c086d0bd5d4986207a67451f51",
+    "semantic_hash": ""
+  },
+  "sat.py": {
+    "mtime": 1782618471.93945,
+    "seen": 1789989786.5436866,
+    "ast_hash": "278c4f5a185471d8d567205fbf33d512",
+    "semantic_hash": ""
+  },
+  "smoke.py": {
+    "mtime": 1788115285.110459,
+    "seen": 1789989786.543687,
+    "ast_hash": "f8121a0745e02def7c1aaeb735356b31",
+    "semantic_hash": ""
+  },
+  "texture.py": {
+    "mtime": 1782618471.93945,
+    "seen": 1789989786.5436883,
+    "ast_hash": "e60c84e163ec81999013a542edec769e",
+    "semantic_hash": ""
+  },
+  "timefx.py": {
+    "mtime": 1788115285.110459,
+    "seen": 1789989786.5436888,
+    "ast_hash": "7facdc7419656ea1b695ea25d99cc894",
+    "semantic_hash": ""
+  },
+  "tplimit.py": {
+    "mtime": 1782618471.93945,
+    "seen": 1789989786.5436893,
+    "ast_hash": "9610e0022d0bddcf66feddb69bafeaf0",
+    "semantic_hash": ""
+  },
+  "transient.py": {
+    "mtime": 1782618471.93945,
+    "seen": 1789989786.54369,
+    "ast_hash": "3710a5777f37c992a97e0dbe9aa8ebd7",
+    "semantic_hash": ""
+  },
+  "tremolo.py": {
+    "mtime": 1782618471.93945,
+    "seen": 1789989786.5436904,
+    "ast_hash": "fd092d3427b7773508759d74db31eb89",
+    "semantic_hash": ""
+  },
+  "verb.py": {
+    "mtime": 1782618471.93945,
+    "seen": 1789989786.543691,
+    "ast_hash": "484059517e69dcdc5edb6f176a2c84ab",
+    "semantic_hash": ""
+  },
+  "vocoder.py": {
+    "mtime": 1782618471.9404502,
+    "seen": 1789989786.5436919,
+    "ast_hash": "baac5a2d5dbfe47df13a2d4e66ae7f04",
+    "semantic_hash": ""
+  },
+  "vst3/bitcrush/BitcrushProcessor.cpp": {
+    "mtime": 1788115285.110459,
+    "seen": 1789989786.5436924,
+    "ast_hash": "35efdbe9c8c001644d9e46dba5d2068f",
+    "semantic_hash": ""
+  },
+  "vst3/chorus/ChorusProcessor.cpp": {
+    "mtime": 1788115285.1154816,
+    "seen": 1789989786.5436928,
+    "ast_hash": "83486fd06f7716be4fc407ec006a0fe0",
+    "semantic_hash": ""
+  },
+  "vst3/clipper/ClipperProcessor.cpp": {
+    "mtime": 1782618471.94145,
+    "seen": 1789989786.5436933,
+    "ast_hash": "9584c4099aaf5aa1d539c62bbd786cde",
+    "semantic_hash": ""
+  },
+  "vst3/comp/CompProcessor.cpp": {
+    "mtime": 1788115285.1156094,
+    "seen": 1789989786.5436938,
+    "ast_hash": "6934db6de7c7a5c3b49ca76e50929ecb",
+    "semantic_hash": ""
+  },
+  "vst3/deesser/DeesserProcessor.cpp": {
+    "mtime": 1788115285.1157918,
+    "seen": 1789989786.543694,
+    "ast_hash": "b30b70a7509020b4e94a18a33abc1cc6",
+    "semantic_hash": ""
+  },
+  "vst3/delay/DelayProcessor.cpp": {
+    "mtime": 1788115285.115975,
+    "seen": 1789989786.5436945,
+    "ast_hash": "8cf7a4f50b1e881f967b9b3b2091edf2",
+    "semantic_hash": ""
+  },
+  "vst3/doubler/DoublerProcessor.cpp": {
+    "mtime": 1788115285.1161275,
+    "seen": 1789989786.5436964,
+    "ast_hash": "45bd26fea4367d464c86340de1dac780",
+    "semantic_hash": ""
+  },
+  "vst3/dsp/Biquad.h": {
+    "mtime": 1782618471.94145,
+    "seen": 1789989786.5436969,
+    "ast_hash": "44bb5b5b478b92c9ff199f028ee6725b",
+    "semantic_hash": ""
+  },
+  "vst3/dsp/DryDelay.h": {
+    "mtime": 1782618471.94145,
+    "seen": 1789989786.5436974,
+    "ast_hash": "047451a730021c301497c9cbd791811e",
+    "semantic_hash": ""
+  },
+  "vst3/dsp/ParameterHelpers.h": {
+    "mtime": 1782618471.94145,
+    "seen": 1789989786.5436978,
+    "ast_hash": "7cb6ac94132e7285d88e6031cecc4ef2",
+    "semantic_hash": ""
+  },
+  "vst3/dsp/ToneFilter.h": {
+    "mtime": 1782618471.94145,
+    "seen": 1789989786.5436985,
+    "ast_hash": "a0f2c20486bea4ec3efa33bca4b76467",
+    "semantic_hash": ""
+  },
+  "vst3/duck/DuckProcessor.cpp": {
+    "mtime": 1788115285.1163414,
+    "seen": 1789989786.543699,
+    "ast_hash": "6f633b9b7538dc39edf520a190576364",
+    "semantic_hash": ""
+  },
+  "vst3/dyneq/DyneqProcessor.cpp": {
+    "mtime": 1788115285.1164882,
+    "seen": 1789989786.5436995,
+    "ast_hash": "a770b132f55585726625e39d5f35e967",
+    "semantic_hash": ""
+  },
+  "vst3/eq/EqProcessor.cpp": {
+    "mtime": 1782618471.94245,
+    "seen": 1789989786.5437,
+    "ast_hash": "af79c2a2b803541e54ecf07cd945795f",
+    "semantic_hash": ""
+  },
+  "vst3/exciter/ExciterProcessor.cpp": {
+    "mtime": 1788115285.1165845,
+    "seen": 1789989786.5437005,
+    "ast_hash": "113962067ab472f58eccafed717ffbc9",
+    "semantic_hash": ""
+  },
+  "vst3/flanger/FlangerProcessor.cpp": {
+    "mtime": 1788115285.1167696,
+    "seen": 1789989786.543701,
+    "ast_hash": "4116afce3b072ab79688ebec96f7ff3e",
+    "semantic_hash": ""
+  },
+  "vst3/gate/GateProcessor.cpp": {
+    "mtime": 1788115285.116889,
+    "seen": 1789989786.5437012,
+    "ast_hash": "ac499fd2be71a89f47d713635287c5e5",
+    "semantic_hash": ""
+  },
+  "vst3/irverb/IrVerbProcessor.cpp": {
+    "mtime": 1788115285.1169925,
+    "seen": 1789989786.5437016,
+    "ast_hash": "1984d0d985e69da1ca1fbdd339347346",
+    "semantic_hash": ""
+  },
+  "vst3/mbcomp/MbcompProcessor.cpp": {
+    "mtime": 1788115285.1171079,
+    "seen": 1789989786.5437021,
+    "ast_hash": "0a2f320d0b02c6b2f1cf82c59a4ad683",
+    "semantic_hash": ""
+  },
+  "vst3/phaser/PhaserProcessor.cpp": {
+    "mtime": 1788115285.1172001,
+    "seen": 1789989786.5437026,
+    "ast_hash": "f6e1583e628a68dfc9eed76be66e78b3",
+    "semantic_hash": ""
+  },
+  "vst3/sat/SatProcessor.cpp": {
+    "mtime": 1782618471.94245,
+    "seen": 1789989786.543703,
+    "ast_hash": "69bcc8932522334614cb5a8de758b682",
+    "semantic_hash": ""
+  },
+  "vst3/texture/TextureProcessor.cpp": {
+    "mtime": 1788115285.1173112,
+    "seen": 1789989786.5437033,
+    "ast_hash": "3e9d8b789eae990e7b8d809476f3f1b4",
+    "semantic_hash": ""
+  },
+  "vst3/tplimit/TplimitProcessor.cpp": {
+    "mtime": 1788115285.1174495,
+    "seen": 1789989786.5437038,
+    "ast_hash": "f6d94c8a57903dfb5989e84af543795a",
+    "semantic_hash": ""
+  },
+  "vst3/transient/TransientProcessor.cpp": {
+    "mtime": 1788115285.117541,
+    "seen": 1789989786.5437043,
+    "ast_hash": "c46d5deb86492db3463578efa3755d90",
+    "semantic_hash": ""
+  },
+  "vst3/tremolo/TremoloProcessor.cpp": {
+    "mtime": 1788115285.1176636,
+    "seen": 1789989786.5437045,
+    "ast_hash": "409d02d3385148d406aa1bd81a6551e2",
+    "semantic_hash": ""
+  },
+  "vst3/verb/Freeverb.h": {
+    "mtime": 1788115285.1177647,
+    "seen": 1789989786.5437052,
+    "ast_hash": "d8bdf3112a4ff0c614a9e5e04848e65a",
+    "semantic_hash": ""
+  },
+  "vst3/verb/VerbProcessor.cpp": {
+    "mtime": 1788115285.1178675,
+    "seen": 1789989786.5437057,
+    "ast_hash": "386ed03f9e6d8375d1fc105994ef1e26",
+    "semantic_hash": ""
+  },
+  "vst3/verify.py": {
+    "mtime": 1788115285.1178675,
+    "seen": 1789989786.5437062,
+    "ast_hash": "0a897cada64a09deb5344c2f61ae2171",
+    "semantic_hash": ""
+  },
+  "vst3/vocoder/VocoderProcessor.cpp": {
+    "mtime": 1788115285.1178675,
+    "seen": 1789989786.5437067,
+    "ast_hash": "4ea4f710bbaa8396bac01948461fa4e8",
+    "semantic_hash": ""
+  },
+  "vst3/width/WidthProcessor.cpp": {
+    "mtime": 1788115285.118072,
+    "seen": 1789989786.5437071,
+    "ast_hash": "56a7cbc08e723e417078549770fcccd0",
+    "semantic_hash": ""
+  },
+  "width.py": {
+    "mtime": 1782618471.94245,
+    "seen": 1789989786.5437076,
+    "ast_hash": "21af6d11d6fa58c3fe30bb2dc9d525c6",
+    "semantic_hash": ""
+  },
+  "BUILD_VS_BUY.md": {
+    "mtime": 1788115285.110459,
+    "seen": 1789989786.543708,
+    "ast_hash": "e55e1684cfdc643568d73fb173f29117",
+    "semantic_hash": ""
+  },
+  "CLAUDE.md": {
+    "mtime": 1788115285.1192484,
+    "seen": 1789989786.543709,
+    "ast_hash": "c1c185a2d34f492021155a87372c215e",
+    "semantic_hash": ""
+  },
+  "ISA.md": {
+    "mtime": 1788115285.110459,
+    "seen": 1789989786.5437098,
+    "ast_hash": "5b9521dadb476976802dfa170134e0b8",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1788115285.110459,
+    "seen": 1789989786.5437102,
+    "ast_hash": "e5c6b80e52bc1df492ae2e668f6ead79",
+    "semantic_hash": ""
+  },
+  "STATE.md": {
+    "mtime": 1788115285.110459,
+    "seen": 1789989786.5437105,
+    "ast_hash": "6b23ced2035cdac4d3ff206932aab31e",
+    "semantic_hash": ""
+  },
+  "matches/README.md": {
+    "mtime": 1782618471.9374502,
+    "seen": 1789989786.5437112,
+    "ast_hash": "8450033e89e284f454e3f7255428d630",
+    "semantic_hash": ""
+  },
+  "matches/autotune-vs-Auburn_Sounds_Graillon_3.md": {
+    "mtime": 1782618471.93845,
+    "seen": 1789989786.5437117,
+    "ast_hash": "9065dac94a894d853991cc1a036bdb90",
+    "semantic_hash": ""
+  },
+  "matches/dyneq-vs-TDR_Nova.md": {
+    "mtime": 1782618471.93845,
+    "seen": 1789989786.5437121,
+    "ast_hash": "e778a2b9ec85a8f506f54c87b313d62b",
+    "semantic_hash": ""
+  },
+  "matches/eq-vs-TDR_Nova.md": {
+    "mtime": 1782618471.93845,
+    "seen": 1789989786.5437129,
+    "ast_hash": "e146b3ef083d9409ed5279424ce058d8",
+    "semantic_hash": ""
+  },
+  "matches/verb-vs-ValhallaSupermassive.md": {
+    "mtime": 1782618471.93845,
+    "seen": 1789989786.543713,
+    "ast_hash": "33f0d50376ca8bc0154d41f6b338657c",
+    "semantic_hash": ""
+  },
+  "vst3/CMakeLists.txt": {
+    "mtime": 1788115285.110459,
+    "seen": 1789989786.5437138,
+    "ast_hash": "9c99503e501cfbc43a433772342e8d0f",
+    "semantic_hash": ""
+  },
+  "vst3/README.md": {
+    "mtime": 1788834086.541876,
+    "seen": 1789989786.5437143,
+    "ast_hash": "1f5e06eeb46385af0bf9632437380540",
+    "semantic_hash": ""
+  }
+}
